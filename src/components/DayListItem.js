@@ -20,7 +20,7 @@ export default function DayListItem(props) {
     {"day-list__item--selected": props.selected},
     {"day-list__item--full": !props.spots}
     );
-
+  
   return (
     <li className={dayListClass} 
         onClick={() => props.onChange(props.name)} 
