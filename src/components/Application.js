@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 //import Button from "./Button";
 import DayList from "./DayList";
 import axios from "axios";
 import "components/Application.scss";
-const appointments = [
+import Appointment from "./Appointment";
+const appointmentsData = [
   {
     id: 1,
     time: "12pm",
@@ -45,18 +46,20 @@ const appointments = [
 
 export default function Application(props) {
   const [days, setDays] = useState([]);
+  const [appointment, setAppointment] = useState([]);
 
   useEffect(() => {
     const testURL = `http://localhost:8001/api/days`;
     axios.get(testURL).then(response => {
       setDays([...response.data])
-      //days = response;
       console.log(response.data);
     });
   }, []);
-  
+
   const [day, setDay] = useState(["Monday"]);
-  //console.log(day);
+
+
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -80,9 +83,14 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        <Fragment>
+          <Appointment
+            appointments={appointmentsData}
+            //value={appointment}
+          />
+        </Fragment>
       </section>
     </main>
   );
-  
+
 }
