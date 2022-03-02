@@ -4,7 +4,7 @@ import DayList from "./DayList";
 import axios from "axios";
 import "components/Application.scss";
 import Appointment from "./Appointment";
-import {getAppointmentsForDay} from "../helpers/selectors"
+import { getAppointmentsForDay } from "../helpers/selectors"
 
 
 export default function Application(props) {
@@ -12,23 +12,35 @@ export default function Application(props) {
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: {}
+    interviewers: {},
+    dailyAppointments: []
   });
-  let dailyAppointments = [];
+
   const setDay = day => setState({ ...state, day });
-  const setDays = days => setState({ ...state, days });
+  //const setDays = days => setState({ ...state, days });
+  
   
   useEffect(() => {
-  Promise.all([
-    axios.get(`http://localhost:8001/api/days`),
-    axios.get(`http://localhost:8001/api/appointments`),
-    axios.get(`http://localhost:8001/api/interviewers`)
-  ]).then((all) => {
-    setState(prev => ({...prev, days:all[0].data, appointments:all[1].data, interviewers:all[2].data}))
-  })
-}, []);
+    Promise.all([
+      axios.get(`http://localhost:8001/api/days`),
+      axios.get(`http://localhost:8001/api/appointments`),
+      axios.get(`http://localhost:8001/api/interviewers`)
+    ]).then((all) => {
+      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
+    })
+  }, []);
 
-dailyAppointments = getAppointmentsForDay(state, state.day);
+  let dailyAppointments = [];
+  dailyAppointments = getAppointmentsForDay(state, state.day);
+  const parsedAppointments = dailyAppointments.map(appointment => {
+    return (
+      <Appointment
+        key={appointment.id}
+        appointment={appointment}
+      />
+    )
+  });
+
 
   return (
     <main className="layout">
@@ -54,25 +66,12 @@ dailyAppointments = getAppointmentsForDay(state, state.day);
       </section>
       <section className="schedule">
         <Fragment>
-          <Appointment
-            appointments={dailyAppointments}
-          />
+          {parsedAppointments}
+          <article className="appointment" time="5pm">5pm
+          </article>
         </Fragment>
       </section>
     </main>
   );
 
 }
-
-// const schedule = appointments.map((appointment) => {
-//   const interview = getInterview(state, appointment.interview);
-
-//   return (
-//     <Appointment
-//       key={appointment.id}
-//       id={appointment.id}
-//       time={appointment.time}
-//       interview={interview}
-//     />
-//   );
-// // });

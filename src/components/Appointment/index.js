@@ -2,28 +2,33 @@ import React from 'react'
 import "components/Appointment/styles.scss";
 import Show from './Show';
 import Empty from './Empty';
+import Form from './Form';
+import { useVisualMode, transition } from 'hooks/useVisualMode';
+const EMPTY = "EMPTY";
+const SHOW = "SHOW";
+const CREATE = "CREATE";
 
 export default function Appointment(props) {
-  const parsedAppointments = props.appointments.map(appointment => {
+
+    const { mode, transition, back } = useVisualMode(
+      props.appointment.interview ? SHOW : EMPTY
+    );
+
     return (
       <article className="appointment"
-      key={appointment.id}
+        key={props.appointment.id}
       >
-        {appointment.time}
-        {appointment.interview ? 
-        <Show 
-        student={appointment.interview.student}
-        interviewer={appointment.interview.interviewer.name}
-        /> 
-        : <Empty />}
+        {props.appointment.time}
+        {mode === CREATE && <Form onCancel={() => back()}/>}
+        {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
+        {mode === SHOW && (
+          <Show
+            student={props.appointment.interview.student}
+            interviewer={props.appointment.interview.interviewer.name}
+          />
+        )}
       </article>
     )
-  });
-  return (
-    <>
-      {parsedAppointments}
-      <article className="appointment" time="5pm">5pm
-      </article>
-    </>
-  )
-}
+  };
+
+  
