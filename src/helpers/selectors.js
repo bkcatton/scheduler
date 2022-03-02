@@ -35,7 +35,7 @@ export function getInterviewersForDay(state, day) {
     return [];
   }
   
-  const filteredApts = [];
-  givenDay.appointments.forEach(appointmentId => filteredApts.push(state.appointments[appointmentId]));
-  return filteredApts
+  const filteredInts = [];
+  givenDay.interviewers.forEach(interviewerId => filteredInts.push(state.interviewers[interviewerId]));
+  return filteredInts
 };

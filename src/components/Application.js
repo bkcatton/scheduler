@@ -4,7 +4,7 @@ import DayList from "./DayList";
 import axios from "axios";
 import "components/Application.scss";
 import Appointment from "./Appointment";
-import { getAppointmentsForDay } from "../helpers/selectors"
+import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "../helpers/selectors"
 
 
 export default function Application(props) {
@@ -20,28 +20,49 @@ export default function Application(props) {
   //const setDays = days => setState({ ...state, days });
 
   function bookInterview(id, interview) {
-    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    setState({
+      ...state,
+      appointments
+    });
+    axios.put(`http://localhost:8001/api/appointments/${id}`,{interview}).then(console.log("done!"));
   }
 
-  
+  function deleteInterview(id) {
+    const interview = null;
+    axios.delete(`http://localhost:8001/api/appointments/${id}`,{data:{interview}}).then(console.log("delete done!"));
+  }
+
   useEffect(() => {
     Promise.all([
       axios.get(`http://localhost:8001/api/days`),
       axios.get(`http://localhost:8001/api/appointments`),
       axios.get(`http://localhost:8001/api/interviewers`)
     ]).then((all) => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
+      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }))
     })
   }, []);
 
   let dailyAppointments = [];
+  let dailyInterviewers = [];
   dailyAppointments = getAppointmentsForDay(state, state.day);
+  dailyInterviewers = getInterviewersForDay(state, state.day);
   const parsedAppointments = dailyAppointments.map(appointment => {
     return (
       <Appointment
         key={appointment.id}
+        interview={getInterview(state, appointment.interview)}
         appointment={appointment}
         bookInterview={bookInterview}
+        deleteInterview={deleteInterview}
+        interviewers={dailyInterviewers}
       />
     )
   });

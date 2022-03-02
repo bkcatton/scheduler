@@ -16,7 +16,7 @@ export default function InterviewerListItem(props) {
           props.onChange(props.id);
           action("ok");
         }}
-        key={props.key}
+        key={props.id}
         >
       <img
         className="interviewers__item-image"
