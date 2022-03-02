@@ -38,7 +38,8 @@ export default function Appointment(props) {
   }
 
   function onEdit(name, interviewer) {
-    save(name, interviewer);
+    transition(EDIT);
+    //save(name, interviewer);
   }
 
 
@@ -55,6 +56,8 @@ export default function Appointment(props) {
         id={props.appointment.id}
         interviewers={props.interviewers}
         save={save} name={props.appointment.student}
+        student={props.interview.student}
+        interviewerID={props.interview.interviewer.id}
         onCancel={() => back()}
       />}
       {mode === CONFIRM && <Confirm
@@ -70,7 +73,6 @@ export default function Appointment(props) {
         interviewers={props.interviewers}
         save={save} name={props.appointment.student}
         onCancel={() => back()}
-        onCancel={() => back()}
       />}
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
@@ -79,6 +81,7 @@ export default function Appointment(props) {
           student={props.interview.student}
           interviewer={props.interview.interviewer.name}
           confirmDelete={confirmDelete}
+          onEdit={()=>transition(EDIT)}
         />
       )}
     </article>
