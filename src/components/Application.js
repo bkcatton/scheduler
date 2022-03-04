@@ -1,60 +1,48 @@
 import React, { useState, useEffect, Fragment } from "react";
-//import Button from "./Button";
 import DayList from "./DayList";
 import axios from "axios";
 import "components/Application.scss";
 import Appointment from "./Appointment";
 import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "../helpers/selectors"
+import useApplicationData from "hooks/useApplicationData";
 
 
 export default function Application(props) {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {},
-    interviewers: {},
-    dailyAppointments: []
-  });
+  const {state, setState, bookInterview, deleteInterview} = useApplicationData();
 
   const setDay = day => setState({ ...state, day });
-  //const setDays = days => setState({ ...state, days });
-  const bookInterview = (id, interview) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    setState({
-      ...state,
-      appointments
-    });
-    let res = axios.put(`http://localhost:8001/api/appointments/${id}`,{interview});
-    return res;
-  }
 
-  const deleteInterview = (id) => {
-    const interview = null;
-    let res = axios.delete(`http://localhost:8001/api/appointments/${id}`,{data:{interview}}).then(console.log("delete done!"));
-    return res;
+  const numberOfSpots = (array) => {
+    let spotsArray = [];
+    for (let i of array) {
+      spotsArray.push(i.spots);
+    }
+    return spotsArray;
   }
-
   useEffect(() => {
     Promise.all([
       axios.get(`http://localhost:8001/api/days`),
       axios.get(`http://localhost:8001/api/appointments`),
       axios.get(`http://localhost:8001/api/interviewers`)
     ]).then((all) => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }))
+      setState(prev => ({
+        ...prev,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data,
+        spots: numberOfSpots(all[0].data)
+      }))
     })
   }, []);
-
+  const setSpots = spots => setState({ ...state, spots });
+  
+  
   let dailyAppointments = [];
   let dailyInterviewers = [];
   dailyAppointments = getAppointmentsForDay(state, state.day);
   dailyInterviewers = getInterviewersForDay(state, state.day);
+  
+  console.log("number of spots", state);
   const parsedAppointments = dailyAppointments.map(appointment => {
     return (
       <Appointment
@@ -67,7 +55,6 @@ export default function Application(props) {
       />
     )
   });
-
 
   return (
     <main className="layout">
@@ -100,5 +87,4 @@ export default function Application(props) {
       </section>
     </main>
   );
-
 }

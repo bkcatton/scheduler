@@ -23,7 +23,7 @@ const ERROR_CREATE = "ERROR_CREATE";
 export default function Appointment(props) {
 
   function save(name, interviewer) {
-    if (name === undefined || interviewer === undefined) {
+    if (name === "" || interviewer === 0) {
       transition(ERROR_CREATE);
       return;
     }
