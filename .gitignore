@@ -6,7 +6,8 @@
 .pnp.js
 
 # testing
-/coverage
+/coverag
+/public/src/components/__tests__
 
 # production
 /build

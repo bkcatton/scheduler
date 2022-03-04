@@ -6,18 +6,18 @@ Install dependencies with `npm install`.
 
 ## Running Webpack Development Server
 
-```sh
+```
 npm start
 ```
 
-## Running Jest Test Framework
+## Scheduler Api must be installed as all data for the api is stored there.
 
-```sh
-npm test
-```
+## Dependencies
+ -axios
+ -classNames
+ -Normalize.css
+ -React
+ -React-dom
+ -react-Scripts
 
-## Running Storybook Visual Testbed
-
-```sh
-npm run storybook
-```
+  
