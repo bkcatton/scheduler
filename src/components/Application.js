@@ -9,7 +9,6 @@ import useApplicationData from "hooks/useApplicationData";
 
 export default function Application(props) {
   const {state, setState, bookInterview, deleteInterview, updateSpots} = useApplicationData();
-
   const setDay = day => setState({ ...state, day });
 
   useEffect(
@@ -28,7 +27,7 @@ export default function Application(props) {
     }).then(()=>{
       
     })
-  }, []);
+  }, [setState]);
 
   let dailyAppointments = [];
   let dailyInterviewers = [];

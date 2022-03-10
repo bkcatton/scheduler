@@ -13,24 +13,18 @@ export default function useApplicationData() {
   const updateSpots = (id, operation) => {
     let dayId = Math.ceil(id / 5)
     let newDays = state.days
-
     if (operation === "book") {
       newDays[dayId - 1].spots -= 1;
     }
     if (operation === "delete") {
       newDays[dayId - 1].spots += 1;
     }
-
     setState((prev) => ({
       ...prev,
       days: newDays
     }));
-
-    console.log("spots has been updated", state.days[dayId].spots)
   };
-
   const bookInterview = (id, interview, update) => {
-    console.log("this is the booked apt id:", id)
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -51,7 +45,6 @@ export default function useApplicationData() {
     })
     return res;
   }
-
   const deleteInterview = (id) => {
     const interview = null;
     return axios.delete(`http://localhost:8001/api/appointments/${id}`, { data: { interview } })
