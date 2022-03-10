@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import Button from 'components/Button'
 import InterviewerList from 'components/InterviewerList'
 
@@ -32,7 +32,9 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={props.onCancel} >Cancel</Button>
-          <Button onClick={() => {props.save(student, interviewer)}} >Save</Button>
+          <Button onClick={() => {
+            props.save(student, interviewer, props.update)
+            }} >Save</Button>
         </section>
       </section>
       

@@ -14,12 +14,9 @@ export function useVisualMode (initial) {
   }
 
   function back() {
-    const newHistory = history
-    newHistory.splice(-1, 1);
-    setHistory(newHistory); 
+    setHistory((oldHistory) => [...oldHistory].splice(-1, 1));
     setMode(history[history.length-1]);
   }
   
   return { mode, transition , back};
 };
-

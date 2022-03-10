@@ -6,7 +6,6 @@ import Form from './Form';
 import Status from './Status';
 import Confirm from './Confirm';
 import Error from './Error';
-import axios from "axios";
 import { useVisualMode } from 'hooks/useVisualMode';
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -22,7 +21,8 @@ const ERROR_CREATE = "ERROR_CREATE";
 
 export default function Appointment(props) {
 
-  function save(name, interviewer) {
+  function save(name, interviewer, update) {
+    console.log("from save function this is the update val", update)
     if (name === "" || interviewer === 0) {
       transition(ERROR_CREATE);
       return;
@@ -32,7 +32,7 @@ export default function Appointment(props) {
       interviewer
     };
     transition(SAVING);
-    props.bookInterview(props.appointment.id, interview)
+    props.bookInterview(props.appointment.id, interview, update)
       .then(() => setTimeout(transition(SHOW), 1000))
       .catch((error) => transition(ERROR_SAVE, true));
   }
@@ -40,7 +40,9 @@ export default function Appointment(props) {
   function deleteInt(id) {
     transition(DELETE)
     props.deleteInterview(id)
-      .then(() => setTimeout(transition(EMPTY), 1000))
+      .then(() => {
+      setTimeout(transition(EMPTY), 1100)
+    })
       .catch((error) => transition(ERROR_DELETE, true));
   }
 
@@ -66,6 +68,7 @@ export default function Appointment(props) {
         save={save} name={props.appointment.student}
         message={"You must select an interviewer and provide a student name"}
         onCancel={() => back()}
+        update={false}
       />}
 
       {mode === ERROR_DELETE && <Error
@@ -83,13 +86,14 @@ export default function Appointment(props) {
         student={props.interview.student}
         interviewerID={props.interview.interviewer.id}
         onCancel={() => back()}
+        update={false}
       />}
 
       {mode === CONFIRM && <Confirm
         id={props.appointment.id}
         onDelete={deleteInt}
         onCancel={() => back()}
-        message={"Do you realllly want to delete this appointment?!"}
+        message={"Do you really want to delete this appointment?"}
       />}
 
       {mode === DELETE && <Status message={"Deleting appointment!"} />}
@@ -100,6 +104,7 @@ export default function Appointment(props) {
         id={props.appointment.id}
         interviewers={props.interviewers}
         save={save} name={props.appointment.student}
+        update={true}
         onCancel={() => back()}
       />}
 
